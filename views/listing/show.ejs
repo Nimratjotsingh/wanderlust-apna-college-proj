@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <% if (locals.data) {%>
+        <img src=<%=data.image.url%>>
+        <h3><%=data.title%></h3>
+        <p><%=data.description%></p>
+        <p>₹<%=data.price.toLocaleString('en-IN')%></p>
+        <p><%=data.location%></p>
+        <p><%=data.country%></p>
+
+        <a href="/edit/<%=data._id%>"><button>Edit This</button></a>
+        <form method="POST" action="/listing/<%=data._id%>?_method=DELETE">
+            <button>Delete</button>
+        </form>
+    <%}%>
+</body>
+</html>
