@@ -1,21 +1,11 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 require('../db.js');
-
+const {data} = require('./db-bulk-data.js')
 
 const listing = require('../models/listing.js');
 
-
-let sampleListing = new listing({
-    title: "My New  Villa",
-    description: "By the beach.",
-    price: 1200,
-    location: "Calungute, Goa",
-    country: "India"
+listing.insertMany(data).then((res)=>{console.log(res)}).catch((e)=>{
+    console.log(e);
 })
-
-sampleListing.save().then((res)=>{console.log(res)}).catch((e)=>{
-    console.log(e)
-});
-
 
