@@ -1,23 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<% layout('layouts/boilerplate.ejs') %>
 <body>
-    <% if (locals.data) {%>
+    <% if (data) {%>
         <img src=<%=data.image.url%>>
+        <p><i>owned by <%=data.owner.username%></i></p> 
         <h3><%=data.title%></h3>
         <p><%=data.description%></p>
         <p>₹<%=data.price.toLocaleString('en-IN')%></p>
         <p><%=data.location%></p>
         <p><%=data.country%></p>
+        
+        <% if (show){%>
+            <a href="/edit/<%=data._id%>"><button>Edit This</button></a>
+            <form method="POST" action="/listing/<%=data._id%>?_method=DELETE">
+                <button>Delete</button>
+           </form>
+        <%}%>
+        
+    
+    <hr>
+    <div>
+      
+    </div>
+    <% if(userId !== null){%>
 
-        <a href="/edit/<%=data._id%>"><button>Edit This</button></a>
-        <form method="POST" action="/listing/<%=data._id%>?_method=DELETE">
-            <button>Delete</button>
+    
+    <div>
+        <h4>Leave a review</h4>
+        <form action="/listing/<%=data._id%>/review" method="POST">
+            <div>
+                <label for="rating" class="form-label"> Rating </label>
+                <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range">
+            </div>
+            <div>
+                <label for="comment"> Comment </label>
+                <textarea name="review[comment]" id="comment" class="form-control" required></textarea>
+                <div class="invalid-feedback">Please submit some comments for review.</div>
+            </div>
+            <br>
+            <button class="btn btn-outline-dark">Submit</button>
         </form>
     <%}%>
+        <br>
+        <div>
+            <h4>Reviews</h4>
+            <ul>
+                <% for(review of data.reviews){%>
+                    <li>
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">@<%= review.author?.username || "Anonymous" %></h5>
+                                <h6 class="card-subtitle mb-2 text-body-secondary"><%=review.rating%> ⭐</h6>
+                                <p class="card-text"><%=review.comment%></p>
+                                <a href="#" class="card-link">Card link</a>
+                                <form action="/listing/<%=data._id%>/review/<%=review._id%>?_method=DELETE" method="POST">
+                                    <button class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                <%}%>
+            </ul>
+
+        </div>
+    </div>
+    <%}%>
 </body>
-</html>

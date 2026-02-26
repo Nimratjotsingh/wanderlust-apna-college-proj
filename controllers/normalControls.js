@@ -1,4 +1,5 @@
 const listing = require('../models/listing');
+const reviews = require('../models/reviews');
 
 exports.home = async(req,res)=>{
     const bulkdata = await listing.find({});
@@ -7,9 +8,12 @@ exports.home = async(req,res)=>{
 
 exports.listing = async(req,res) =>{
     let {id} = req.params;
-    const data =  await listing.findById(id);
-    console.log(data);
-    res.render('listing/show.ejs',{data});
+    const data =  await listing.findById(id).populate({path: "reviews" ,populate: {path: "author"}}).populate("owner");
+    let ownerId = data.owner._id.toString();
+    let userId = req.user ? req.user.id : null
+    let show = ownerId == userId ? true : false 
+
+    res.render('listing/show.ejs',{data, show, userId});
 }
 exports.new = (req,res)=>{
     res.render('listing/new.ejs');
@@ -17,28 +21,44 @@ exports.new = (req,res)=>{
 exports.edit = async (req,res)=>{
     let {id} = req.params;
     let data = await listing.findById(id);
-    res.render('listing/edit.ejs',{data});
+    const ownerId = data._id.toString();
+    const userId = req.user ? req.user.id : null;
+    if(ownerId != userId){
+        return res.render('error.ejs',{message: 'Sorry you are not permitted to do this action!'})
+    }
+    console.log(data);
+    res.render('listing/edit.ejs',{data}); 
 }
 
 
 exports.listingReq = async (req,res)=>{
-    let {title,description,image,price,location,country} = req.body;
-    const newListing = new listing({
-        title,
-        description,
-        image: {url: image},
-        price,
-        location,
-        country
-    });
-    let saved = await newListing.save();
-    console.log(saved)
-    res.redirect('/')
+    
+        let {title,description,image,price,location,country} = req.body;
+        const newListing = new listing({
+            title,
+            description,
+            image: {url: image},
+            price,
+            location,
+            country,
+            owner: req.user._id
+        });
+        let saved = await newListing.save();
+        console.log(saved)
+        res.redirect('/')
 }
 
 exports.editReq = async (req,res)=>{
     let {id} = req.params;
     let {title,description,image,price,location,country} = req.body;
+    let editList = await listing.findById(id);
+    let ownerId = editList.owner._id.toString();
+    let userId = req.user ? req.user.id : null;
+    if(ownerId != userId){
+        return res.render('error.ejs',{message: 'Sorry you are not permitted to do this action!'})
+    }
+
+
     let data = await listing.findByIdAndUpdate(id,{
         title,
         description,
@@ -47,12 +67,22 @@ exports.editReq = async (req,res)=>{
         location,
         country
     },{new: true});
+
     res.redirect('/listing/' + id);
 
 }
 
 exports.deleteReq = async(req,res)=>{
     let {id} = req.params;
+    const data = await listing.findById(id);
+    const ownerId = data.owner._id.toString();
+    let userId = req.user ? req.user.id : null;
+    if(ownerId != userId){
+        return res.render('error.ejs',{message: 'Sorry you are not permitted to do this action!'})
+    }
+    for(let review of data.reviews){
+        await reviews.findByIdAndDelete(review);
+    }
     const del = await listing.findByIdAndDelete(id);
     res.redirect('/')
 }

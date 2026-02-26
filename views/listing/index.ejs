@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<% layout('layouts/boilerplate') %>
+
 <body>
-    <h3> Listings</h3>
-    <a href="/new"><button>Add New</button></a>
-    <% if (locals.bulkdata){ %>
-        <% for (let data of bulkdata) { %>
-            <a href="/listing/<%=data._id%>"><div style="border:1px solid black; margin:10px; padding:10px;">
-                <img src = <%= data.image.url %> >
-                <p><strong>ID:</strong> <%= data._id %></p>
-                <p><strong>Name:</strong> <%= data.title %></p>
-                <p><strong>Description:</strong> <%= data.description %></p>
-            </div></a>
-        <%}%>
-    <%}else{%>
-        no data found
-    <%}%>
-    
+<h3>Listings</h3>
+
+<% if (bulkdata && bulkdata.length) { %>
+    <div class="column">
+  <% for (let data of bulkdata) { %>
+    <a href="/listing/<%= data._id %>" style="text-decoration: none;">
+        
+        <div class="card" style="width: 18rem;">
+        <img src="<%=data.image.url%>" class="card-img-top" alt="...">
+        <div class="card-body">
+            <p class="card-text"><%=data.title%> <br> ₹ <%=data.price%> / night</p>
+        </div>
+        </div>
+    </a> 
+  <% } %>
+<% } else { %>
+  no data found
+<% } %>
 </body>
-</html>

@@ -1,30 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<% layout('layouts/boilerplate.ejs') %>
 <body>
     <h1>Edit</h1>
-    <% if (locals.data) { %>
+    <% if (data) { %>
         <form action="/listing/<%=data._id%>?_method=PUT" method="POST">
             <label for="title">Title:</label><br>
-            <input type="text" id="title" name="title" value="<%=data.title%>"><br>
+            <input type="text" id="title" name="title" value="<%=data.title%>" required><br>
             <label for="description">Description:</label><br>
-            <input type="text" id="description" name="description" value="<%=data.description%>"><br>
+            <input type="text" id="description" name="description" value="<%=data.description%>" required><br>
             <label for="image">Image URL:</label><br>
-            <input type="text" id="image" name="image" value="<%=data.image.url%>"><br>
+            <input type="text" id="image" name="image" value="<%=data.image.url%>" required><br>
             <label for="price">Price:</label><br>
-            <input type="number" id="price" name="price" value="<%=data.price%>"><br>
+            <input type="number" id="price" name="price" value="<%=data.price%>" required><br>
             <label for="location">Location:</label><br>
-            <input type="text" id="location" name="location" value="<%=data.location%>"><br>
+            <input type="text" id="location" name="location" value="<%=data.location%>" required><br>
             <label for="country">Country:</label><br>
-            <input type="text" id="country" name="country" value="<%=data.country%>"><br><br>
+            <input type="text" id="country" name="country" value="<%=data.country%>" required><br><br>
             <input type="submit" value="Update">
         </form>
     <% } else { %>
         <p>No data found</p>
     <% } %>
-</body>
-</html>
+    </body>

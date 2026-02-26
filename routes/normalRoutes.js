@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const {isLoggedIn}  = require('../middleware/isLoggedIn');
 
 const controller = require('../controllers/normalControls');
 
+
 router.get('/',controller.home);
 router.get('/listing/:id', controller.listing);
-router.get('/new',controller.new);
-router.get('/edit/:id',controller.edit);
+router.get('/new',isLoggedIn,controller.new);
+router.get('/edit/:id',isLoggedIn,controller.edit);
 
-router.post('/listing',controller.listingReq);
+router.post('/listing',isLoggedIn,controller.listingReq);
 
-router.put('/listing/:id',controller.editReq);
+router.put('/listing/:id',isLoggedIn,controller.editReq);
 
-router.delete('/listing/:id',controller.deleteReq)
+router.delete('/listing/:id',isLoggedIn,controller.deleteReq)
 
 module.exports = router;

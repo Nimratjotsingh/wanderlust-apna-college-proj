@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { type } = require('os');
 
 const defaultImg = "https://img.freepik.com/premium-photo/abstract-blur-defocused-hotel-lobby-interior-background-vintage-filter_875825-64135.jpg?semt=ais_hybrid&w=740&q=80";
 
@@ -31,6 +30,14 @@ const listingSchema = new mongoose.Schema({
     country: {
         type: String,
         required: true
+    },
+    reviews: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'review'
+    }],
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 })
 
