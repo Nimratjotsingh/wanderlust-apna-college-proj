@@ -2,13 +2,13 @@
 <body>
     <h1>Edit</h1>
     <% if (data) { %>
-        <form action="/listing/<%=data._id%>?_method=PUT" method="POST">
+        <form action="/listing/<%=data._id%>?_method=PUT" method="POST" enctype="multipart/form-data">
             <label for="title">Title:</label><br>
             <input type="text" id="title" name="title" value="<%=data.title%>" required><br>
             <label for="description">Description:</label><br>
             <input type="text" id="description" name="description" value="<%=data.description%>" required><br>
             <label for="image">Image URL:</label><br>
-            <input type="text" id="image" name="image" value="<%=data.image.url%>" required><br>
+            <input type="file" id="image" name="image" value="<%=data.image.url%>" required><br>
             <label for="price">Price:</label><br>
             <input type="number" id="price" name="price" value="<%=data.price%>" required><br>
             <label for="location">Location:</label><br>

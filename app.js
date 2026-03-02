@@ -8,6 +8,9 @@ const localStrategy = require('passport-local');
 const userModel  = require('./models/user');
 const session = require('express-session');
 const passport = require('passport');
+const multer = require('multer');
+const upload = multer({dest: '/uploads'})
+
 
 require('dotenv').config();
 require('./db');
