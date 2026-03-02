@@ -1,6 +1,7 @@
 <% layout('layouts/boilerplate.ejs') %>
 <script>
      const coordinates = <%=JSON.stringify(data.geometry.coordinates)%>;
+     const token = '<%=process.env.MAP_TOKEN%>';
 </script>
 <body>
     <% if (data) {%>

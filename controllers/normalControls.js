@@ -11,13 +11,14 @@ exports.home = async(req,res)=>{
 }
 
 exports.listing = async(req,res) =>{
+    const mapBoxToken = process.env.MAP_TOKEN;
     let {id} = req.params;
     const data =  await listing.findById(id).populate({path: "reviews" ,populate: {path: "author"}}).populate("owner");
     let ownerId = data.owner._id.toString();
     let userId = req.user ? req.user.id : null
     let show = ownerId == userId ? true : false 
 
-    res.render('listing/show.ejs',{data, show, userId});
+    res.render('listing/show.ejs',{data, show, userId,mapBoxToken});
 }
 exports.new = (req,res)=>{
     res.render('listing/new.ejs');
