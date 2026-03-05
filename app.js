@@ -3,10 +3,10 @@ const app = express();
 const port = 8080;
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate')
-const passsport  = require('passport');
 const localStrategy = require('passport-local');
 const userModel  = require('./models/user');
 const session = require('express-session');
+const MongoStore = require('connect-mongo').default;
 const passport = require('passport');
 const multer = require('multer');
 const upload = multer({dest: '/uploads'})
@@ -16,10 +16,22 @@ require('dotenv').config();
 require('./db');
 
 
+const store = MongoStore.create({
+    mongoUrl: process.env.DB_URL,
+    crypto:{
+        secret: 'keyboard cat'
+    },
+    touchAfter: 24*3600
+});
+
+store.on("error",(err)=>{
+    console.log("Error in MONGO SESSION STORE",err);
+})
 
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
 app.use(session({
+    store,
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
